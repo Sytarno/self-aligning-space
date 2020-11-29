@@ -3,9 +3,9 @@ let i;
 let INC = 0.5;
 let CAP = 2;
 let FPS = 3; //DEFAULT
-let RATE = 0.005;
+let RATE = 0.002;
 let layer_cap = 10;
-let SMOOTH_WEIGHT = 250;
+let SMOOTH_WEIGHT = 200;
 
 let INIT_BOUNDARY;
 let te;
@@ -25,13 +25,14 @@ let speed = 0;
 let z = 0;
 
 let init = false;
+let aud;
 
 function setup(){
   //size(1280, 960, P3D);
   canv = createCanvas(windowWidth, windowHeight, WEBGL);
   canv.position(0,0);
   canv.style('z-index', '-1');
-  frameRate(60);
+  frameRate(120);
 
   //surface.setResizable(true);
   //i = INIT_BOUNDARY*(2/3);
@@ -42,7 +43,7 @@ function setup(){
     ac.push(0);
     ace.push(0);
     weight.push(0);
-    flip.push(pow(-1, i));
+    flip.push(pow(1, i));
     gravity.push(0);
   }
   
@@ -55,15 +56,17 @@ function draw(){
   fill(0, 0, 0);
   
   translate(0, 0, zR);
-  zR += (z-zR)/(SMOOTH_WEIGHT*FPS);
-  z = constrain(z, -200, 200);
+  zR += (z-zR)/(SMOOTH_WEIGHT/5*FPS);
+  z = constrain(z, -1400, 600);
   
-  let xT = map(mouseX, 0, width, 0, 5*PI);
-  xR += (xT-xR)/(SMOOTH_WEIGHT*FPS);
+  let xT = map(mouseX-width/2, -width/2, width/2, -5*PI, 5*PI);
+  xR += (xT-xR)/(SMOOTH_WEIGHT*5*FPS);
   
-  let yT = map(mouseY, 0, height, 0, 5*PI);
-  yR += (yT-yR)/(SMOOTH_WEIGHT*FPS);
+  let yT = map(mouseY-height/2, -height/2, height/2, -5*PI, 5*PI);
+  yR += (yT-yR)/(SMOOTH_WEIGHT*5*FPS);
   
+  let movement = map(mouseX-pmouseX, -100, 100, -1*PI/CAP, 1*PI/CAP);
+
   //rotateY(xR);
   for(let layer = 1; layer < layer_cap; layer++){
     rotateX(yR*flip[layer]);
@@ -72,17 +75,17 @@ function draw(){
       
       stroke(255);
       //stroke(255, 255-(255*abs(ac[layer]/PI)), 255-(255*abs(ac[layer]/PI)));
-      strokeWeight(2);
-      let r = constrain(te/INIT_BOUNDARY, 0.01, 1);
-      let b = 1-(1.0*layer/layer_cap);
+      strokeWeight(3);
+      let r = constrain(te/INIT_BOUNDARY, 0.01, 1)
+      let b = pow(map(1-(1.0*layer/layer_cap), 0, 1, 0, 2), 1);
       line(height*r*b+impulse, 0, 0, 0, height*r*b+impulse, 0);
-      
+      //gravity[layer]*height*(layer_cap-layer)*2
       
       if(i < INIT_BOUNDARY+RATE && !init){ te = i; }else{ init = true; te = INIT_BOUNDARY; }
       
       rotateZ(weight[layer]+ace[layer]); 
-      let movement = map(mouseX-pmouseX, -100, 100, -5*PI/CAP, 5*PI/CAP);
       gravity[layer] += (movement-gravity[layer])/(SMOOTH_WEIGHT*FPS);
+      
       ac[layer] = gravity[layer];
       ace[layer] += (ac[layer]-ace[layer])/(SMOOTH_WEIGHT*FPS);
       weight[layer] += (te-weight[layer])/(SMOOTH_WEIGHT*FPS);
@@ -94,11 +97,13 @@ function draw(){
   //}else{
   //  i = (2*PI);
   //}
+  //var spectrum = aud.analyze();
+  //console.log(spectrum);
 }
 
 function mouseWheel(event){
   let e = -event.delta;
-  z+=(e*30);
+  z+=(e);
 }
 
 function mousePressed(){
@@ -108,7 +113,6 @@ function mousePressed(){
     if (mouseButton === RIGHT) {
       CAP = constrain(CAP-2, 2, 900);
     }
-    console.log(CAP);
 
     C = CAP/INC;
   	INIT_BOUNDARY = (2*PI)*((C-1)/C);
@@ -116,7 +120,7 @@ function mousePressed(){
 
 function keyPressed(){
 	if(key == 'q'){
-
+		//aud = new p5.FFT();
 	}
 }
 
