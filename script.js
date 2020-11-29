@@ -81,10 +81,10 @@ function draw(){
       if(i < INIT_BOUNDARY+RATE && !init){ te = i; }else{ init = true; te = INIT_BOUNDARY; }
       
       rotateZ(weight[layer]+ace[layer]); 
-      let movement = map(mouseX-pmouseX, -100, 100, -50*PI/CAP, 50*PI/CAP);
+      let movement = map(mouseX-pmouseX, -100, 100, -5*PI/CAP, 5*PI/CAP);
       gravity[layer] += (movement-gravity[layer])/(SMOOTH_WEIGHT*FPS);
       ac[layer] = gravity[layer];
-      ace[layer] += (ac[layer]-ace[layer])/(SMOOTH_WEIGHT*SMOOTH_WEIGHT*FPS);
+      ace[layer] += (ac[layer]-ace[layer])/(SMOOTH_WEIGHT*FPS);
       weight[layer] += (te-weight[layer])/(SMOOTH_WEIGHT*FPS);
     }
   }
