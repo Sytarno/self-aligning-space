@@ -2,7 +2,7 @@ var i;
 
 var INC = 0.5;
 var CAP = 2;
-var FPS = 60; //DEFAULT
+var FPS = 30; //DEFAULT
 var RATE = 0.005;
 var layer_cap = 10;
 
@@ -31,6 +31,7 @@ function setup(){
   canv = createCanvas(windowWidth, windowHeight, WEBGL);
   canv.position(0,0);
   canv.style('z-index', '-1');
+  frameRate(144);
 
   //surface.setResizable(true);
   
