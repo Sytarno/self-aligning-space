@@ -34,10 +34,9 @@ function setup(){
   frameRate(60);
 
   //surface.setResizable(true);
-  
+  //i = INIT_BOUNDARY*(2/3);
   C = CAP/INC;
   INIT_BOUNDARY = (2*PI)*((C-1)/C);
-  //i = INIT_BOUNDARY*(2/3);
   i = 0;
   for(let i = 0; i < layer_cap; i++){
     ac.push(0);
@@ -52,12 +51,12 @@ function setup(){
 
 //60fps
 function draw(){
-  background(0);
+  background(20);
   fill(0, 0, 0);
   
   translate(0, 0, zR);
   zR += (z-zR)/(SMOOTH_WEIGHT*FPS);
-  z = constrain(z, -400, 400);
+  z = constrain(z, -200, 200);
   
   let xT = map(mouseX, 0, width, 0, 5*PI);
   xR += (xT-xR)/(SMOOTH_WEIGHT*FPS);
@@ -102,6 +101,30 @@ function mouseWheel(event){
   z+=(e*30);
 }
 
+function mousePressed(){
+    if (mouseButton === LEFT) {
+      CAP = constrain(CAP+2, 2, 900);
+    }
+    if (mouseButton === RIGHT) {
+      CAP = constrain(CAP-2, 2, 900);
+    }
+    console.log(CAP);
+
+    C = CAP/INC;
+  	INIT_BOUNDARY = (2*PI)*((C-1)/C);
+}
+
+function keyPressed(){
+	if(key == 'q'){
+
+	}
+}
+
 function windowResized(){
     resizeCanvas(windowWidth, windowHeight);
 }
+
+window.addEventListener('contextmenu', function (e) { 
+  // do something here... 
+  e.preventDefault(); 
+}, false);
